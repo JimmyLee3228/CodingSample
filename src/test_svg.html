@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Code Sample</title>
+  </head>
+  <body>
+    <svg width='100vw' height="100vh"  xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="cell-pattern" patternUnits="userSpaceOnUse" width="114" height="114">
+          <circle  cx="50" cy="50" r="47" fill="black"></circle>
+        </pattern>
+        <mask id="cell-mask">
+          <rect width="800" height="800" fill="white"></rect>
+          <rect width="800" height="800" fill="url(#cell-pattern)"></rect>
+        </mask>
+      </defs>
+      <g id="game-board">
+        <svg x="300" y="100">
+          <rect style="z-index: 10;" rx="5" width=798 height=684 fill='#CCCC00' mask="url(#cell-mask)" />
+        </svg>
+      </g>
+    </svg>
+  </body>
+</html>
