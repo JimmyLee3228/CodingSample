@@ -9,8 +9,10 @@ const appReducer = createReducer(initialState, {
     return {
       ...state,
       ...{
-        x,
-        y
+        mousePosition: {
+          x,
+          y
+        }
       }
     };
   },

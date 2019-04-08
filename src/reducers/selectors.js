@@ -9,11 +9,6 @@ export const currentPlayerIdSelector = createSelector(
 
 const appSelector = state => state.app;
 
-export const mouseCoordsSelector = createSelector(
-  appSelector,
-  app => ({x: app.x, y: app.y})
-);
-
 const gameBoardSelector = state => state.gameBoard;
 
 export const gameBoardDimensionsSelector = createSelector(
@@ -29,4 +24,9 @@ export const gameBoardDimensionsSelector = createSelector(
 export const mouseDownSelector = createSelector(
   appSelector,
   app => app.mouseDown
+);
+
+export const mousePositionSelector = createSelector(
+  appSelector,
+  app => app.mousePosition
 );

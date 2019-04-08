@@ -1,45 +1,57 @@
 import { CHECKER_RADIUS } from '../constants';
 
-const getCheckerCoords = (x, offsetX, y, offsetY, left, top, right, bottom, prevX, prevY) => {
-  const coords = {};
+const getCheckerCoords = (checkerX, checkerY, mouseX, mouseY, left, top, right, bottom, offsetX, offsetY) => {
+  const coords = {
+    x: checkerX,
+    y: checkerY
+  };
 
-  const centerX = x + offsetX;
-  const centerY = y + offsetY;
-  const prevCenterX = prevX + offsetX;
-  const prevCenterY = prevY + offsetY;
+  const newXPosition = mouseX - offsetX;
+  const newYPosition = mouseY - offsetY;
 
-  const isMoveRight = centerX > prevCenterX;
-  const isMoveLeft = centerX < prevCenterX;
-  const isMoveDown = centerY > prevCenterY;
-  const isMoveUp = centerY < prevCenterY;
+  const isMoveRight = newXPosition > checkerX;
+  const isMoveLeft = newXPosition < checkerX;
+  const isMoveDown = newYPosition > checkerY;
+  const isMoveUp = newYPosition < checkerY;
 
-  const isLeft = centerX < left - CHECKER_RADIUS;
-  const isRight = centerX > right + CHECKER_RADIUS;
-  const isAbove = centerY < top - CHECKER_RADIUS;
-  const isBelow = centerY > bottom + CHECKER_RADIUS;
-  const isNotIntersecting = (isLeft || isAbove || isRight || isBelow);
+  const isCheckerLeft = checkerX <= left - CHECKER_RADIUS;
+  const isCheckerRight = checkerX >= right + CHECKER_RADIUS;
+  const isCheckerAbove = checkerY <= top - CHECKER_RADIUS;
+  const isCheckerBelow = checkerY >= bottom + CHECKER_RADIUS;
+  const isCheckerNotIntersecting = (isCheckerLeft || isCheckerAbove || isCheckerRight || isCheckerBelow);
 
-  if (isNotIntersecting && (isMoveRight || isMoveLeft)) {
-    coords.x = centerX;
-  }  else {
-    if (isLeft) {
+  const isMouseLeft = newXPosition <= left - CHECKER_RADIUS;
+  const isMouseRight = newXPosition >= right + CHECKER_RADIUS;
+  const isMouseAbove = newYPosition <= top - CHECKER_RADIUS;
+  const isMouseBelow = newYPosition >= bottom + CHECKER_RADIUS;
+  const isMouseNotIntersecting = (isMouseLeft || isMouseAbove || isMouseRight || isMouseBelow);
+
+  if (isMouseNotIntersecting && isMoveLeft && !(isCheckerRight && isMouseLeft)) {
+    coords.x = newXPosition;
+  } else if (isMouseNotIntersecting && isMoveRight && !(isCheckerLeft && isMouseRight)) {
+    coords.x = newXPosition;
+  } else if (isCheckerAbove || isCheckerBelow) {
+    coords.x = newXPosition;
+  } else if (newXPosition !== checkerX) {
+    if (isCheckerLeft) {
       coords.x = left - CHECKER_RADIUS;
-    } else if (isRight) {
+    } else if (isCheckerRight) {
       coords.x = right + CHECKER_RADIUS;
-    } else {
-      coords.x = prevCenterX
     }
   }
 
-  if (isNotIntersecting && (isMoveUp || isMoveDown)) {
-    coords.y = centerY;
-  } else {
-    if (isAbove) {
+
+  if (isMouseNotIntersecting && isMoveUp && !(isCheckerBelow && isMouseAbove)) {
+    coords.y = newYPosition;
+  } else if (isMouseNotIntersecting && isMoveDown && !(isCheckerAbove && isMouseBelow)) {
+    coords.y = newYPosition;
+  } else if (isCheckerLeft || isCheckerRight) {
+    coords.y = newYPosition;
+  } else if (newYPosition !== checkerY) {
+    if (isCheckerAbove) {
       coords.y = top - CHECKER_RADIUS;
-    } else if (isBelow) {
+    } else if (isCheckerBelow) {
       coords.y = bottom + CHECKER_RADIUS;
-    } else {
-      coords.y = prevCenterY;
     }
   }
 

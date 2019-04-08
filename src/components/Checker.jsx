@@ -2,9 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
-  mouseCoordsSelector,
-  gameBoardDimensionsSelector,
-  mouseDownSelector
+  gameBoardDimensionsSelector
 } from '../reducers/selectors';
 import { creaceCheckerSelector } from '../reducers/ormSelectors';
 import { checkerMoved } from '../constants/actions';
@@ -16,10 +14,8 @@ import {
 const mapState = (state, props) => {
   const checkerSelector = creaceCheckerSelector(props.id);
   return {
-    mouseCoords: mouseCoordsSelector(state),
     checker: checkerSelector(state),
-    gameBoardDimensions: gameBoardDimensionsSelector(state),
-    isMouseDown: mouseDownSelector(state)
+    gameBoardDimensions: gameBoardDimensionsSelector(state)
   };
 };
 
@@ -40,53 +36,57 @@ class Checker extends React.Component {
       offsetY: 0
     };
 
-    this.onMouseDown = this.onMouseDown.bind(this);
     this.onMouseUp = this.onMouseUp.bind(this);
-  }
-
-  static getDerivedStateFromProps(props, state) {
-    if (state.dragging === false) return null;
-    const x = props.mouseCoords.x;
-    const y = props.mouseCoords.y;
-    const { left, top, right, bottom } = props.gameBoardDimensions;
-    const prevX = state.x;
-    const prevY = state.y;
-    return getCheckerCoords(x, state.offsetX, y, state.offsetY, left, top, right, bottom, prevX, prevY);
-  }
-
-  onMouseDown(e) {
-    const x = e.pageX;
-    const y = e.pageY;
-    this.setState(state => ({
-      dragging: true,
-      offsetX: x - state.x,
-      offsetY: y - state.y
-    }));
+    this.onMouseMove = this.onMouseMove.bind(this);
+    this.onMouseDown = this.onMouseDown.bind(this);
   }
 
   onMouseUp() {
+    this.setState(state => ({
+      dragging: false,
+      offsetX: 0,
+      offsetY: 0
+    }));
+
+    document.removeEventListener('mouseup', this.onMouseUp);
+    document.removeEventListener('mousemove', this.onMouseMove);
+  }
+
+  onMouseMove(e) {
+    const x = e.pageX;
+    const y = e.pageY;
+    const { left, top, right, bottom } = this.props.gameBoardDimensions;
+
     this.setState(state => {
-      const x = state.x - state.offsetX;
-      const y = state.y - state.offsetY;
-      this.props.checkerMoved(this.props.id, x, y);
-      return {
-        dragging: false,
-        x,
-        y,
-        offsetX: 0,
-        offsetY: 0
-      };
+      const checkerX = state.x;
+      const checkerY = state.y;
+      const offsetX = state.offsetX;
+      const offsetY = state.offsetY;
+
+      return getCheckerCoords(checkerX, checkerY, x, y, left, top, right, bottom, offsetX, offsetY);
     });
+  }
+
+  onMouseDown(e) {
+    const mouseX = e.pageX;
+    const mouseY = e.pageY;
+    this.setState(state => ({
+      dragging: true,
+      offsetX: mouseX - state.x,
+      offsetY: mouseY - state.y
+    }));
+
+    document.addEventListener('mousemove', this.onMouseMove);
+    document.addEventListener('mouseup', this.onMouseUp);
   }
 
   render() {
     return <circle
-      cx={this.state.x - this.state.offsetX}
-      cy={this.state.y - this.state.offsetY}
+      cx={this.state.x}
+      cy={this.state.y}
       r={CHECKER_RADIUS}
       fill={this.props.checker.player.color}
       onMouseDown={this.onMouseDown}
-      onMouseUp={this.onMouseUp}
     />;
   }
 }

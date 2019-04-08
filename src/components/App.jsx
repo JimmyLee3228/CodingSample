@@ -9,11 +9,12 @@ import {
   GAME_CELL_SIDE_LENGTH
 } from '../constants';
 
-import { documentMouseMove } from '../constants/actions';
+import { documentMouseMove, documentMouseUp } from '../constants/actions';
 
 const mapDispatch = (dispatch) => {
   return {
-    mouseMove: (x, y) => dispatch(documentMouseMove(x, y))
+    mouseMove: (x, y) => dispatch(documentMouseMove(x, y)),
+    mouseUp: () => dispatch(documentMouseUp())
   }
 };
 
@@ -22,15 +23,20 @@ class App extends React.Component {
     super(props);
 
     this.onMouseMove = this.onMouseMove.bind(this);
+    this.onMouseUp = this.onMouseUp.bind(this);
   }
 
   onMouseMove(e) {
     this.props.mouseMove(e.pageX, e.pageY);
   }
 
+  onMouseUp() {
+    this.props.mouseUp();
+  }
+
   render() {
     return (
-      <svg onMouseMove={this.onMouseMove} width='100vw' height="100vh" xmlns="http://www.w3.org/2000/svg">
+      <svg onMouseMove={this.onMouseMove} onMouseUp={this.onMouseUp} width='100vw' height="100vh" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <pattern id="cell-pattern" patternUnits="userSpaceOnUse" width={GAME_CELL_SIDE_LENGTH} height={GAME_CELL_SIDE_LENGTH}>
             <circle  cx={GAME_CELL_SIDE_LENGTH/2} cy={GAME_CELL_SIDE_LENGTH/2} r={CHECKER_RADIUS} fill="black"></circle>
