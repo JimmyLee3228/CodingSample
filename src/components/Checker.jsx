@@ -103,7 +103,18 @@ class Checker extends React.Component {
       const checkerX = state.x;
       const checkerY = state.y;
 
-      return getCheckerCoords(checkerX, checkerY, x, y, left, top, right, bottom, offsetX, offsetY);
+      return getCheckerCoords(
+        checkerX,
+        checkerY,
+        x,
+        y,
+        left,
+        top,
+        right,
+        bottom,
+        offsetX,
+        offsetY
+      );
     });
   }
 

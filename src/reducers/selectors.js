@@ -20,13 +20,3 @@ export const gameBoardDimensionsSelector = createSelector(
     bottom: gameBoard.gameBoardBottom
   })
 );
-
-export const mouseDownSelector = createSelector(
-  appSelector,
-  app => app.mouseDown
-);
-
-export const mousePositionSelector = createSelector(
-  appSelector,
-  app => app.mousePosition
-);

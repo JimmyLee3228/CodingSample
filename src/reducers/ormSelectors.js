@@ -29,6 +29,15 @@ export const checkersSelector = createSelector(
   }
 );
 
+export const checkerIdsSelector = createSelector(
+  orm,
+  ormSelector,
+  checkersSelector,
+  (session, checkers) => {
+    return checkers.map(checker => checker.id);
+  }
+);
+
 export const creaceCheckerSelector = (checkerId) => {
   return createSelector(
     orm,

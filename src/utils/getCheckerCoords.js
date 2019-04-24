@@ -1,6 +1,17 @@
 import { CHECKER_RADIUS } from '../constants';
 
-const getCheckerCoords = (checkerX, checkerY, mouseX, mouseY, left, top, right, bottom, offsetX, offsetY) => {
+const getCheckerCoords = (
+    checkerX,
+    checkerY,
+    mouseX,
+    mouseY,
+    left,
+    top,
+    right,
+    bottom,
+    offsetX,
+    offsetY
+  ) => {
   const coords = {
     x: checkerX,
     y: checkerY
@@ -39,7 +50,6 @@ const getCheckerCoords = (checkerX, checkerY, mouseX, mouseY, left, top, right, 
       coords.x = right + CHECKER_RADIUS;
     }
   }
-
 
   if (isMouseNotIntersecting && isMoveUp && !(isCheckerBelow && isMouseAbove)) {
     coords.y = newYPosition;
